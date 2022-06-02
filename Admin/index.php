@@ -1,17 +1,16 @@
 <?php
-include('./partials/menu.php');
+// include('./partials/menu.php');
 
-if (!isset($_SESSION['user'])) {
-    header('location:' . SITEURL . 'Admin/login.php');
-}
+// if (!isset($_SESSION['user'])) {
+//     header('location:' . SITEURL . 'Admin/login.php');
+// }
 ?>
 
 <!-- Alert -->
-<section class="alert_frontend" id="alert" style="margin-top: 100px; position: absolute; top: -20px; left: 20px; display: block; width: 100%; z-index: 2;">
+<!-- <section class="alert_frontend" id="alert" style="margin-top: 100px; position: absolute; top: -20px; left: 20px; display: block; width: 100%; z-index: 2;">
     <div class="container">
         <div class="row">
             <div class="col-md-12 mt-3">
-                <!-- Alert Message Error -->
                 <?php if (isset($_GET['error'])) { ?>
                     <div class="container mt-3 mx-auto" id="alert">
                         <div class="row">
@@ -21,7 +20,6 @@ if (!isset($_SESSION['user'])) {
                         </div>
                     </div>
                 <?php } ?>
-                <!-- Alert Message Success -->
                 <?php if (isset($_GET['success'])) { ?>
                     <div class="container mt-3 mx-auto" id="alert">
                         <div class="row">
@@ -31,13 +29,12 @@ if (!isset($_SESSION['user'])) {
                         </div>
                     </div>
                 <?php } ?>
-                <!-- End Alert -->
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
-<section style="margin-top: 100px;">
+<!-- <section style="margin-top: 100px;">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -125,4 +122,20 @@ if (!isset($_SESSION['user'])) {
         </div>
     </div>
 </section>
-<?php include('./partials/footer.php'); ?>
+<?php include('./partials/footer.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    hello
+</body>
+
+</html>
