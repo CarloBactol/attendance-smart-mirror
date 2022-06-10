@@ -1,50 +1,7 @@
 <?php
 session_start();
-include('./config/db_connection.php');
-$studentID = "";
-if (isset($_SESSION['studentID']) == true) {
-    $studentID = $_SESSION['studentID'];
-}
+include("./config/db_connection.php");
 
-
-
-// var_dump($studentID);
-// die();
-//Initialize value
-$li = "";
-$i = 0;
-$div = "";
-// query
-$sql = "SELECT * FROM tbl_announcement WHERE active='Yes'  ORDER BY id DESC ";
-$res = mysqli_query($conn, $sql);
-$count = mysqli_num_rows($res);
-
-while ($row = mysqli_fetch_assoc($res)) {
-
-    if ($i == 0) {
-        $li .=  ' <li data-target="#carouselExampleCaptions" data-slide-to="' . $i . '" class="active"></li>';
-        $div .= '<div class="carousel-item active">
-                            
-                            <img src="./images/announcement/' . $row['image'] . '" class="d-block w-100" alt="...">
-                            
-                            <div class="carousel-caption  d-sm-block d-md-block">
-                                <h5>' . $row['title'] . '</h5>
-                                <a href="announcement.php?announcement" class="btn btn-success px-3 mb-2">View</a>
-                            </div>
-                
-                        </div>';
-    } else {
-        $li .=  ' <li data-target="#carouselExampleCaptions" data-slide-to="' . $i . '"></li>';
-        $div .= '<div class="carousel-item">
-                            <img src="./images/announcement/' . $row['image'] . '" class="d-block w-100">
-                            <div class="carousel-caption  d-sm-block  d-md-block">
-                                <h5>' . $row['title'] . '</h5>
-                                <a href="announcement.php?announcement" class="btn btn-success px-3 mb-2">View</a>
-                            </div>
-                        </div>';
-    }
-    $i++;
-}
 ?>
 
 <!DOCTYPE html>
@@ -80,20 +37,6 @@ while ($row = mysqli_fetch_assoc($res)) {
 
 <body style="overflow-x: hidden; background-color: #000;">
 
-    <?php
-    $sql = "SELECT * FROM tbl_test order by id desc limit 1";
-    $res = mysqli_query($conn, $sql);
-    $count = mysqli_num_rows($res);
-    if (mysqli_num_rows($res) === 1) {
-        $row = mysqli_fetch_assoc($res);
-    }
-    ?>
-
-    <!-- temperature -->
-    <div class="container" style="position: fixed; top:0; left: 35%; z-index: 9999; width: 300px;">
-        <span id="demo"></span>
-    </div>
-
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">
@@ -123,7 +66,7 @@ while ($row = mysqli_fetch_assoc($res)) {
                                                                     } ?> href="<?php echo SITEURL ?>paging.php?paging">Paging</a>
                 </li>
 
-                <!-- <?php if (isset($_SESSION['name'])) { ?>
+                <?php if (isset($_SESSION['name'])) { ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?php echo $_SESSION['name']; ?>
@@ -142,7 +85,7 @@ while ($row = mysqli_fetch_assoc($res)) {
                                                         ?> class="nav-link" <?php
                                                                         } ?> href="<?php echo SITEURL ?>student_login.php?student_login">Login</a>
                     </li>
-                <?php } ?> -->
+                <?php } ?>
             </ul>
 
         </div>
@@ -153,7 +96,6 @@ while ($row = mysqli_fetch_assoc($res)) {
         <div class="container">
             <div class="row">
                 <div class="col-md-12 mt-3">
-
                     <!-- Alert Message Error -->
                     <?php if (isset($_GET['error'])) { ?>
                         <div class="container mt-3 mx-auto" id="alert">
@@ -180,39 +122,66 @@ while ($row = mysqli_fetch_assoc($res)) {
         </div>
     </section>
 
-    <!-- Slider -->
-    <section class="announcements text-center" style="margin-top: 100px">
-        <div class="container-fluid  my-5">
-            <div class="row">
-                <div class="col-md-12 text-center text-light mt-4 mb-3">
-                    <h3>Announcements</h3>
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <?php echo $li; ?>
-                        </ol>
-                        <div class="carousel-inner">
-                            <?php echo $div; ?>
+    <div class="container" style="margin-top: 100px">
+        <div class="row">
+            <div class="col-md-12">
+                <form action="student_function.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group text-light">
+                                    <label for="student_id">Student ID</label>
+                                    <?php
+                                    $code = rand(100, 9999);
+                                    //  date("Y-m-d") Year/Month/Date
+                                    $unq_user_id = "STUDENT_" . $code . "_" .  date("Y-m-d");
+                                    ?>
+                                    <input type="text" name="student_id" class="form-control use-keyboard-input" value="<?php echo $unq_user_id; ?>" placeholder="Enter Student ID" required>
+                                </div>
+                                <div class="form-group text-light">
+                                    <label for="name">Name</label>
+                                    <input type="text" name="name" class="form-control use-keyboard-input" placeholder="Enter Name" required>
+                                </div>
+                                <div class="form-group text-light">
+                                    <label for="password">Password</label>
+                                    <input type="password" name="password" class="form-control use-keyboard-input" value="<?php echo $unq_user_id; ?>" placeholder="*******" required>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroup">Section</label>
+                                    </div>
+                                    <select class="custom-select" name="section" id="inputGroup" required>
+                                        <option selected>Choose Section</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroup">Grade Level</label>
+                                    </div>
+                                    <select class="custom-select" name="grade" id="inputGroup" required>
+                                        <option selected>Choose Grade</option>
+                                        <option value="7">Grade 7</option>
+                                        <option value="8">Grade 8</option>
+                                        <option value="9">Grade 9</option>
+                                        <option value="10">Grade 10</option>
+                                        <option value="11">Grade 11</option>
+                                        <option value="12">Grade 12</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-target="#carouselExampleCaptions" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-target="#carouselExampleCaptions" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </button>
                     </div>
-                </div>
-                <div class="col-md-1"></div>
+                    <div class="modal-footer">
+                        <button type="submit" name="btn_insert_student" class="btn btn-primary">Register</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
-
-
-    <!-- Paging -->
+    </div>
 
 
     <!-- Footer -->
@@ -222,29 +191,19 @@ while ($row = mysqli_fetch_assoc($res)) {
 
     <script>
         // set Timeout alert
+        const timeOut = setTimeout(Alert, 3000);
 
         function Alert() {
             document.getElementById("alert").remove();
         }
-    </script>
 
-    <script>
-        function loadDoc() {
-            var interval = setInterval(function() {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("demo").innerHTML = this.responseText;
-                    }
-                };
-                xhttp.open("GET", "temp.php", true);
-                xhttp.send();
-            }, 1000);
+        // set Timeout alert
+        const timeOutTemp = setTimeout(AlertTemp, 3000);
+
+        function AlertTemp() {
+            document.getElementById("alertTemp").remove();
         }
-        loadDoc();
-        clearInterval(interval);
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="./js/keyboard.js"></script>
 </body>
 

@@ -11,4 +11,9 @@
     height: 400px;
     min-height: 400px;
   }
+  #alertTemp {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+  }
 }

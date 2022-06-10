@@ -1,4 +1,5 @@
 <?php
+session_start();
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -14,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $api_key = test_input($_POST["api_key"]);
     if ($api_key == $api_key_value) {
 
-        $new_value = array('7.1' => "value_one", '6.2' => "value_two");
+        $new_value = array('10.1' => "value_one", '10.2' => "value_two");
         $arr_rand = array_rand($new_value);
 
         $value = test_input($_POST["value"]) + $arr_rand;
@@ -31,6 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         VALUES ('" . $value . "')";
 
         if ($conn->query($sql) === TRUE) {
+            $_SESSION['value'] = $value;
+            echo $_SESSION['value'];
+
+            $_SESSION['start'] = time();
+            $_SESSION['expire'] = $_SESSION['start'] + (1 * 5);
             echo "New record created successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;

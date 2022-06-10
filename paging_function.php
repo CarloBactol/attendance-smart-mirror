@@ -1,29 +1,37 @@
-<?php include('./config/db_connection.php');
+<?php
+include('./config/db_connection.php');
 
-//check if click the save button
-if (isset($_POST['btn_insert_paging'])) {
+// Insert Paging
+if (isset($_POST['btn_insert'])) {
 
-    $staff_name = $_POST['staff_name'];
-    if (!empty($_POST['name'])) {
+    if (!empty($_POST['std_id']) && !empty($_POST['name']) && !empty($_POST['purpose'])) {
+
+        $staff_name = $_POST['staff_name'];
+        $std_id = $_POST['std_id'];
         $name = $_POST['name'];
-    }
-    if (!empty($_POST['contact'])) {
-        $contact = $_POST['contact'];
-    }
-    if (!empty($_POST['purpose'])) {
         $purpose = $_POST['purpose'];
-    }
 
-    // Insert to the database table tbl_paging
-    $sql = "INSERT INTO tbl_paging(name, staff_name, contact, purpose) Values('$name', '$staff_name', '$contact', '$purpose')";
-    //run query
-    $res = mysqli_query($conn, $sql);
-    //check if inserted or not
-    if ($res == TRUE) {
-        header('location:' . SITEURL . 'paging.php?success=Successfully Added');
-        exit();
+        $sql = "SELECT * FROM tbl_student WHERE studentID = '$std_id'";
+        $res = mysqli_query($conn, $sql);
+        $count = mysqli_num_rows($res);
+        if ($count > 0) {
+            while ($row = mysqli_fetch_assoc($res)) {
+                if ($row['studentID'] == $std_id) {
+                    $sql2 = "INSERT INTO tbl_paging(staff_name, name, purpose, student_id) VALUES('$staff_name','$name','$purpose','$student_id')";
+                    $res2 = mysqli_query($conn, $sql2);
+                    if ($res2 == TRUE) {
+                        header('location:' . SITEURL . 'paging.php?success=true');
+                    } else {
+                        header('location:' . SITEURL . 'paging.php?error=false');
+                    }
+                } else {
+                    header('location:' . SITEURL . 'paging.php?error=false');
+                }
+            }
+        } else {
+            header('location:' . SITEURL . 'paging.php?error=Not data');
+        }
     } else {
-        header('location:' . SITEURL . 'announcement.php?error=Something went wrong!');
-        exit();
+        header('location:' . SITEURL . 'paging.php?error=Not Autorized');
     }
 }

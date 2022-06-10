@@ -9,7 +9,15 @@
     function Alert() {
         document.getElementById("alert").remove();
     }
+
+    // set Timeout alert
+    const timeOutTemp = setTimeout(AlertTemp, 3000);
+
+    function AlertTemp() {
+        document.getElementById("alertTemp").remove();
+    }
 </script>
+<script src="./js/keyboard.js"></script>
 </body>
 
 </html>

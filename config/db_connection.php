@@ -1,10 +1,7 @@
 <?php
-//Start Session
-session_start();
-
 
 //create constants to store non repeating values
-define('SITEURL', 'http://localhost/Attendance-smart-mirror/');
+define('SITEURL', 'http://192.168.1.30/Attendance-smart-mirror/');
 define('LOCALHOST', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');

@@ -8,15 +8,21 @@ include('../config/db_connection.php');
 //check whether the submit button is clicked or not
 if (isset($_POST['btn_insert'])) {
 
-
+    if (!empty($_POST['name'])) {
+        $name = $_POST['name'];
+    }
+    if (!empty($_POST['description'])) {
+        $description = $_POST['description'];
+    }
     if (!empty($_POST['username'])) {
         $username = $_POST['username'];
     }
     if (!empty($_POST['password'])) {
         $password = $_POST['password'];
+        $hash_password = md5($password);
     }
-    if (!empty($_POST['active'])) {
-        $active = $_POST['active'];
+    if (!empty($_POST['role'])) {
+        $role = $_POST['role'];
     }
 
     if (isset($_FILES['image']['name'])) {
@@ -55,7 +61,7 @@ if (isset($_POST['btn_insert'])) {
     }
 
     //create sql query to insert category into database
-    $sql = "INSERT INTO tbl_admin (username, password, image, active) VALUES ('$username', '$password', '$image', '$active')";
+    $sql = "INSERT INTO tbl_admin (name, description, username, password, image, role) VALUES ('$name', '$description','$username', '$hash_password', '$image', '$role')";
 
     //execute the query and save in database
     $res = mysqli_query($conn, $sql);

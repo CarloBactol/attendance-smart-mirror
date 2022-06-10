@@ -4,6 +4,8 @@ include('./partials/menu.php');
 
 ?>
 
+
+<!-- Staff -->
 <section style="margin-top: 100px;">
     <div class="container">
         <div class="row">
@@ -39,7 +41,7 @@ include('./partials/menu.php');
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Add Staff</h5>
+                                <h5 class="modal-title" id="exampleModalLongTitle">Add Teacher</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -50,7 +52,7 @@ include('./partials/menu.php');
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group p-1">
-                                                <label for="username">Name</label>
+                                                <label for="username">Teacher Name</label>
                                                 <input type="text" class="form-control" id="name" name="name" required />
                                                 <div class="invalid-feedback">name cannot be have a special character and 4 min length</div>
                                                 <div class="valid-feedback">Looks Good</div>
@@ -74,6 +76,20 @@ include('./partials/menu.php');
                                                     </div>
                                                 </div>
                                             </div>
+                                            <hr>
+                                            <!-- <h4>For login Account Staff</h4>
+                                            <div class="form-group">
+                                                <label for="username">Username</label>
+                                                <input type="text" name="username" id="username" class="form-control " placeholder="Enter Username" value="" required>
+                                                <div class="invalid-feedback">username cannot be blank</div>
+                                                <div class="valid-feedback">Looks Good</div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">Password</label>
+                                                <input type="password" name="password" id="password" class="form-control " placeholder="*************" value="" required>
+                                                <div class="invalid-feedback mb-3">Minimum eight characters, at least one upper case, one lower case, one number and one special character</div>
+                                                <div class="valid-feedback mb-3">Looks Good</div>
+                                            </div> -->
                                             <div class="mb-3">
                                                 <label for="active">Active</label>
                                                 <select class="custom-select" name="active" id="active" required>
@@ -214,6 +230,7 @@ include('./partials/menu.php');
                                                                     </div>
                                                                 </div>
                                                             </div>
+
                                                             <div class="input-group mb-3">
                                                                 <div class="input-group-prepend">
                                                                     <label class="input-group-text" for="inputGroupSelect01">Active</label>
@@ -302,6 +319,8 @@ include('./partials/menu.php');
     </div>
     </div>
 </section>
+
+
 <script src="../js/jquery-manified.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {

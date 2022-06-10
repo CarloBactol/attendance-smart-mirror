@@ -2,7 +2,12 @@
 <?php
 
 //initilize variables
-$card = "";
+$card = $studentID = "";
+
+if (isset($_SESSION['studentID']) == true) {
+    $studentID = $_SESSION['studentID'];
+}
+
 
 //check if isset btn_search
 if (isset($_POST['btn_search'])) {
@@ -62,6 +67,14 @@ if (isset($_POST['btn_search'])) {
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-12">
+                                            <?php if (isset($_SESSION['name']) == true) { ?>
+                                                <input type="hidden" name="std_id" class="form-control use-keyboard-input" value="<?php echo $studentID; ?>" placeholder="Enter Student ID" required>
+                                            <?php   } else {  ?>
+                                                <div class="form-group">
+                                                    <label for="std_id">Student ID</label>
+                                                    <input type="text" name="std_id" class="form-control use-keyboard-input" value="<?php echo $studentID; ?>" placeholder="Enter Student ID" required>
+                                                </div>
+                                            <?php } ?>
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" class="form-control" placeholder="Enter Name" required>

@@ -1,14 +1,6 @@
 <?php
+session_start();
 include('../config/db_connection.php');
-
-
-if (isset($_SESSION['user'])) {
-    header('location:' . SITEURL . 'Admin/');
-} else {
-    echo `<script>window.location.assign("http://localhost/Attendance-smart-mirror/Admin/login.php")</script>`;
-}
-
-
 ?>
 
 
@@ -57,23 +49,27 @@ if (isset($_SESSION['user'])) {
                 <div class="col-md-12 mt-3">
                     <!-- Alert Message Error -->
                     <?php if (isset($_GET['error'])) { ?>
-                        <div class="container mt-3 mx-auto" id="alert">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="alert alert-danger" role="alert"><?php echo $_GET['error']; ?></div>
-                                </div>
-                            </div>
-                        </div>
+                        <script>
+                            swal({
+                                title: "<?php echo $_GET['error']; ?>",
+                                text: "You have an error. Please try again!",
+                                icon: "error",
+                                button: "Ohh no!",
+                            });
+                        </script>
                     <?php } ?>
                     <!-- Alert Message Success -->
-                    <?php if (isset($_GET['success'])) { ?>
-                        <div class="container mt-3 mx-auto" id="alert">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="alert alert-success" role="alert"><?php echo $_GET['success']; ?></div>
-                                </div>
-                            </div>
-                        </div>
+                    <?php if (isset($_GET['success'])) {
+
+                    ?>
+                        <script>
+                            swal({
+                                title: "<?php echo $_GET['success']; ?>",
+                                text: "Welcome back <?php echo $_GET['success'] . " " . date('F j, Y g:i:a'); ?>",
+                                icon: "success",
+                                button: "Aww yiss!",
+                            });
+                        </script>
                     <?php } ?>
                     <!-- End Alert -->
                 </div>
@@ -92,6 +88,16 @@ if (isset($_SESSION['user'])) {
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" name="password" placeholder="Password" required>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroup">Select Login Confirmation</label>
+                    </div>
+                    <select class="custom-select" name="role" id="inputGroup" required>
+                        <option selected>Choose Login Status</option>
+                        <option value="is_admin">Admin</option>
+                        <option value="is_teacher">Teacher</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <button type="submit" name="btn_login" class="btn btn-primary form-control">Login</button>

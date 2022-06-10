@@ -1,10 +1,17 @@
 <?php
 include('../config/db_connection.php');
 session_start();
+date_default_timezone_set('Asia/Manila');
 
 ?>
+<?php
+
+echo "<span style='color:red;font-weight:bold;'>Date: </span>" . date('F j, Y g:i:a  ');
+?>
+
 
 <?php if (isset($_SESSION['role_admin'])) {
+
 
 ?>
     <!DOCTYPE html>
@@ -17,9 +24,15 @@ session_start();
         <!-- Bootstrap 4 css-->
         <link rel="stylesheet" href="../css/bootstrap.min.css">
         <title>Smart Mirror</title>
+        <!-- datatbable -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
+
+        <!-- sweetalert -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
 
-    <body style="overflow-x: hidden; background-color: #000;">
+    <body style=" background-color: #f1f1f1;">
 
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -52,12 +65,12 @@ session_start();
                                                             ?> class="nav-link" <?php
                                                                             } ?> href="<?php echo SITEURL ?>Admin/admin.php?admin">Administration</a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a <?php if (isset($_GET['staff']) == 'staff') {
+                        <li class="nav-item">
+                            <a <?php if (isset($_GET['student']) == 'student') {
                                 ?> class="nav-link active" <?php } else {
                                                             ?> class="nav-link" <?php
-                                                                            } ?> href="<?php echo SITEURL ?>Admin/staff.php?staff">Staff</a>
-                        </li> -->
+                                                                            } ?> href="<?php echo SITEURL ?>Admin/student.php?student">Student</a>
+                        </li>
                         <li class="nav-item">
                             <a <?php if (isset($_GET['temperature']) == 'temperature') {
                                 ?> class="nav-link active" <?php } else {
@@ -76,52 +89,65 @@ session_start();
         </nav>
         <!-- end-navbar -->
 
-        <!-- admin -->
-        <section class="admin_section" style="margin-top: 100px;">
+        <!-- student -->
+        <section class="admin_section text-dark" style="margin-top: 100px;">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4 class="page-header text-center text-white">Administration </h4>
+                        <h4 class="page-header text-center text-dark">Student List </h4>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                            Add Administration
+                        <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#exampleModalCenter">
+                            Add Student
                         </button>
                         <!-- Alert Message Error -->
                         <?php if (isset($_GET['error'])) { ?>
-                            <div class="container mt-3 mx-auto" id="alert">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="alert alert-danger" role="alert"><?php echo $_GET['error']; ?></div>
-                                    </div>
-                                </div>
-                            </div>
+                            <script>
+                                swal({
+                                    title: "<?php echo $_GET['error']; ?>",
+                                    text: "You have an error. Please try again!",
+                                    icon: "error",
+                                    button: "Aww yiss!",
+                                });
+                            </script>
                         <?php } ?>
                         <!-- Alert Message Success -->
-                        <?php if (isset($_GET['success'])) { ?>
-                            <div class="container mt-3 mx-auto" id="alert">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="alert alert-success" role="alert"><?php echo $_GET['success']; ?></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <?php if (isset($_GET['success'])) {
+
+                        ?>
+                            <script>
+                                swal({
+                                    title: "<?php echo $_GET['success']; ?>",
+                                    text: "Congrats <?php echo $_GET['success'] . " " . date('F j, Y g:i:a'); ?>",
+                                    icon: "success",
+                                    button: "Aww yiss!",
+                                });
+                            </script>
                         <?php } ?>
                         <!-- End Alert -->
-
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-sm-12">
                         <!-- Modal Insert-->
                         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Add Administration</h5>
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <form action="admin_function.php" method="POST" enctype="multipart/form-data">
+                                    <form action="student_function.php" method="POST" enctype="multipart/form-data">
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="std_id">Student ID</label>
+                                                        <?php
+                                                        $code = rand(100, 9999);
+                                                        $unique_id = "STUDENT_" . $code . "_" . date("Y-m-d");
+                                                        ?>
+                                                        <input type="text" name="std_id" class="form-control is-valid" value="<?php echo $unique_id; ?>" placeholder="Enter Student ID" required>
+                                                    </div>
                                                     <div class="form-group">
                                                         <label for="name">Name</label>
                                                         <input type="text" name="name" class="form-control" placeholder="Enter Name" required>
@@ -129,19 +155,6 @@ session_start();
                                                     <div class="form-group">
                                                         <label for="description">Description</label>
                                                         <input type="text" name="description" class="form-control" placeholder="Enter Description" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <?php
-                                                        $code = rand(1, 9999);
-                                                        //  date("Y-m-d") Year/Month/Date
-                                                        $unq_user = "TEACHER_" . $code . "_" .  date("Y-m-d");
-                                                        ?>
-                                                        <label for="username">Username</label>
-                                                        <input type="text" name="username" class="form-control" value="<?php echo $unq_user; ?>" placeholder="Enter Username" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="password">Password</label>
-                                                        <input type="password" name="password" class="form-control" value="<?php echo $unq_user; ?>" placeholder="********" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="exampleInputFile">File input</label>
@@ -154,12 +167,29 @@ session_start();
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
-                                                            <label class="input-group-text" for="input_select">Role</label>
+                                                            <label class="input-group-text" for="input_select">Section</label>
                                                         </div>
-                                                        <select class="custom-select" name="role" id="input_select" required>
+                                                        <select class="custom-select" name="section" id="input_select" required>
                                                             <option selected>Choose...</option>
-                                                            <option value="is_admin">Admin</option>
-                                                            <option value="is_teacher">Teacher</option>
+                                                            <option value="A">A</option>
+                                                            <option value="B">B</option>
+                                                            <option value="C">C</option>
+                                                            <option value="D">D</option>
+                                                            <option value="E">E</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <label class="input-group-text" for="input_select">Grade Level</label>
+                                                        </div>
+                                                        <select class="custom-select" name="grade" id="input_select" required>
+                                                            <option selected>Choose...</option>
+                                                            <option value="7">7</option>
+                                                            <option value="8">8</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                            <option value="11">11</option>
+                                                            <option value="12">12</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -175,16 +205,16 @@ session_start();
                         </div>
                         <!-- end modal -->
 
-
                         <!-- table -->
-                        <table class="table mt-5 text-light">
+                        <table class="table table-striped text-dark  table-hover" id="example">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Username</th>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Grade Level</th>
+                                    <th>Section</th>
+                                    <th>Description</th>
                                     <th>Image</th>
-                                    <th>Role</th>
                                     <th>Date Created</th>
                                     <th>Action</th>
                                 </tr>
@@ -192,23 +222,25 @@ session_start();
                             <tbody>
                                 <?php
                                 //initial value set to empty
-                                $id = $username = $image = $role = $date = "";
+                                $id = $studentID = $image = $description = $date = $name = "";
 
                                 // query
-                                $sql = "SELECT * FROM tbl_admin WHERE role ='is_teacher'";
+                                $sql = "SELECT * FROM tbl_student ORDER BY id DESC";
                                 $res = mysqli_query($conn, $sql);
                                 $count = mysqli_num_rows($res);
                                 if ($count > 0) {
                                     while ($row = mysqli_fetch_array($res)) {
                                         $id = $row['id'];
                                         $name = $row['name'];
-                                        $username = $row['username'];
+                                        $grade = $row['grade'];
+                                        $section = $row['section'];
+                                        $studentID = $row['studentID'];
                                         $image = $row['image'];
-                                        $role = $row['role'];
+                                        $description = $row['description'];
                                         $date = $row['date']; ?>
                                         <tr>
-                                            <td><?php if ($id == True) {
-                                                    echo $id;
+                                            <td><?php if ($studentID == True) {
+                                                    echo $studentID;
                                                 } else {
                                                     echo "No data Found";
                                                 } ?></td>
@@ -217,35 +249,40 @@ session_start();
                                                 } else {
                                                     echo "No data Found";
                                                 } ?></td>
-                                            <td><?php if ($username == True) {
-                                                    echo $username;
+                                            <td><?php if ($grade == True) {
+                                                    echo $grade;
+                                                } else {
+                                                    echo "No data Found";
+                                                } ?></td>
+                                            <td><?php if ($section == True) {
+                                                    echo $section;
+                                                } else {
+                                                    echo "No data Found";
+                                                } ?></td>
+                                            <td><?php if ($description == True) {
+                                                    echo $description;
                                                 } else {
                                                     echo "No data Found";
                                                 } ?></td>
                                             <td><?php if ($image == True) {
-                                                    echo '<img class="rounded-circle border border-success" src="../images/admin/' . $image . '" alt="' . $username . '" width="40px" height="40px">';
-                                                } else {
-                                                    echo "No data Found";
-                                                } ?></td>
-                                            <td><?php if ($role == True) {
-                                                    echo 'Teacher';
+                                                    echo '<img class="rounded-circle border border-success" src="../images/student/' . $image . '" alt="' . $name . '" width="40px" height="40px">';
                                                 } else {
                                                     echo "No data Found";
                                                 } ?></td>
                                             <td><?php if ($date == True) {
-                                                    echo $date;
+                                                    echo date("F j, Y g:i:a", strtotime($date));
                                                 } else {
                                                     echo "No data Found";
                                                 } ?></td>
                                             <td><?php if ($id == True) { ?>
-                                                    <div class="row" style="gap: 10px;">
-                                                        <button type="button" class="btn btn-primary px-3" data-toggle="modal" data-target="#edit_admin<?php echo $row['id']; ?>">
+                                                    <div class="row d-flex">
+                                                        <button type="button" class="btn btn-sm btn-primary px-3 mb-2" data-toggle="modal" data-target="#edit_admin<?php echo $row['id']; ?>">
                                                             Edit
                                                         </button>
-                                                        <form action="admin_function.php" method="POST" enctype="multipart/form-data">
+                                                        <form class="form" action="student_function.php" method="POST" enctype="multipart/form-data">
                                                             <input type="hidden" name="delete_id" value="<?php echo $row['id'] ?>">
                                                             <input type="hidden" name="delete_image" value="<?php echo $row['image'] ?>">
-                                                            <button type="submit" id="delete" class="btn btn-danger" name="btn_delete">Delete</button>
+                                                            <button type="submit" id="delete" class="btn btn-sm btn-danger" name="btn_delete">Delete</button>
                                                         </form>
                                                     </div>
                                                 <?php  } else {
@@ -259,38 +296,37 @@ session_start();
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLongTitle">Update Profile</h5>
+                                                        <h5 class="modal-title" id="exampleModalLongTitle">Update Student</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <form method="POST" action="admin_function.php" enctype="multipart/form-data">
+                                                    <form action="student_function.php" method="POST" enctype="multipart/form-data">
                                                         <div class="modal-body">
                                                             <div class="row">
                                                                 <input type="hidden" class="form-control" name="new_id" value="<?php echo $id; ?>">
                                                                 <div class="col-md-12">
-
                                                                     <div class="form-group">
-                                                                        <label for="name">name</label>
-                                                                        <?php if ($name == TRUE) { ?>
-                                                                            <input type="text" name="name" class="form-control is-valid" value="<?php echo $name; ?>" placeholder="Enter Name" required>
-                                                                        <?php } else { ?>
-                                                                            <input type="text" name="name" class="form-control is-invalid" placeholder="Enter Name" required>
-                                                                        <?php } ?>
+                                                                        <label for="std_id">Student ID</label>
+                                                                        <?php if ($studentID == TRUE) : ?>
+                                                                            <input type="text" name="studentID" class="form-control is-valid" value="<?php echo $studentID; ?>" placeholder="Enter Student ID" required>
+                                                                        <?php else : ?>
+                                                                            <input type="text" name="studentID" class="form-control is-invalid" value="<?php echo $studentID; ?>" placeholder="Enter Student ID" required>
+                                                                        <?php endif ?>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label for="username">Username</label>
-                                                                        <?php if ($username == TRUE) { ?>
-                                                                            <input type="text" name="username" class="form-control is-valid" value="<?php echo $username; ?>" placeholder="Enter Name" required>
-                                                                        <?php } else { ?>
-                                                                            <input type="text" name="username" class="form-control is-invalid" placeholder="Enter Name" required>
-                                                                        <?php } ?>
+                                                                        <label for="name">Name</label>
+                                                                        <input type="text" name="name" class="form-control is-valid" value="<?php echo $name; ?>" placeholder="Enter Name" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="description">Description</label>
+                                                                        <input type="text" name="description" class="form-control is-valid" value="<?php echo $description; ?>" placeholder="Enter Description" required>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="image">Image</label>
                                                                         <div class="row">
                                                                             <div class="col-md-12">
-                                                                                <img src="../images/admin/<?php echo $image; ?>" alt="<?php echo $username; ?>" class="w-100 ">
+                                                                                <img src="../images/student/<?php echo $image; ?>" alt="<?php echo $name; ?>" class="img-thumbnail">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -298,19 +334,35 @@ session_start();
                                                                         <label for="exampleInputFile">File input</label>
                                                                         <div class="input-group">
                                                                             <div class="custom-file">
-                                                                                <input type="file" name="image" class="custom-file-input">
-                                                                                <label class="custom-file-label">Choose file</label>
+                                                                                <input type="file" name="image" class="custom-file-input" required>
+                                                                                <label class="custom-file-label" for="file_edit">Choose file</label>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="input-group mb-3">
                                                                         <div class="input-group-prepend">
-                                                                            <label class="input-group-text">Role</label>
+                                                                            <label class="input-group-text" for="input_select">Section</label>
                                                                         </div>
-                                                                        <select class="custom-select is-valid" name="role" required>
-                                                                            <option selected value="<?php echo $role; ?>"><?php echo $role; ?> -(current)</option>
-                                                                            <option value="is_admin">Admin</option>
-                                                                            <option value="is_admin">Teacher</option>
+                                                                        <select class="custom-select is-valid" name="section" id="input_select" required>
+                                                                            <option selected value="<?php echo $section ?>"><?php echo $section; ?></option>
+                                                                            <option value="A">A</option>
+                                                                            <option value="C">C</option>
+                                                                            <option value="D">D</option>
+                                                                            <option value="E">E</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="input-group mb-3">
+                                                                        <div class="input-group-prepend">
+                                                                            <label class="input-group-text" for="input_select">Grade Level</label>
+                                                                        </div>
+                                                                        <select class="custom-select is-valid" name="grade" id="input_select" required>
+                                                                            <option selected value="<?php echo $grade ?>"><?php echo $grade; ?></option>
+                                                                            <option value="7">7</option>
+                                                                            <option value="8">8</option>
+                                                                            <option value="9">9</option>
+                                                                            <option value="10">10</option>
+                                                                            <option value="11">11</option>
+                                                                            <option value="12">12</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -318,7 +370,7 @@ session_start();
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" name="btn_update" class="btn btn-primary">Update</button>
+                                                            <button type="submit" name="btn_update" class="btn btn-primary">Save</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -337,14 +389,6 @@ session_start();
         </section>
 
 
-        <script src="../js/jquery-manified.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                bsCustomFileInput.init()
-            })
-        </script>
-
-
         <div class="container mt-5">
             footer
         </div>
@@ -356,8 +400,20 @@ session_start();
                 document.getElementById("alert").remove();
             }
         </script>
+
+        <!-- datatable -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+        <script>
+            $(document).ready(function() {
+                $('#example').DataTable();
+                bsCustomFileInput.init();
+            });
+        </script>
+
         <!-- Bootstrap 4 js -->
-        <script src="../js/jquery.slim.min.js"></script>
+        <!-- <script src="../js/jquery.slim.min.js"></script> -->
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script src="../js/bs-custom-file-input.js"></script>
     </body>
